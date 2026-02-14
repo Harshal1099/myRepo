@@ -1,0 +1,175 @@
+Put your HTML text<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine? 💖</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card {
+    background: white;
+    padding: 35px 45px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 100; /* Stays above hearts */
+    width: 320px;
+  }
+
+  h1 {
+    color: #e63946;
+    margin-bottom: 20px;
+    font-size: 26px;
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    min-height: 80px;
+    align-items: center;
+  }
+
+  button {
+    padding: 12px 25px;
+    font-size: 17px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+  }
+
+  #yesBtn {
+    background: #ff4d6d;
+    color: white;
+    z-index: 101;
+  }
+
+  #noBtn {
+    background: #adb5bd;
+    color: white;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    z-index: 102;
+  }
+
+  .heart {
+    position: fixed;
+    bottom: -10px;
+    font-size: 24px;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.6;
+    pointer-events: none; /* Prevents hearts from blocking clicks */
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 0.7; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h1 id="question">Will you be my Valentine? 💕</h1>
+  <div class="btn-container">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 🙈</button>
+  </div>
+</div>
+
+<audio id="music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const card = document.getElementById("card");
+  const music = document.getElementById("music");
+  
+  let noAttempts = 0;
+  let yesScale = 1;
+
+  // Move the No button function
+  function teaseNoButton() {
+    noAttempts++;
+
+    // 1. Teleport the button
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    // 2. Make the Yes button grow so it's impossible to miss
+    yesScale += 0.4;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // 3. Change button text for extra teasing
+    const phrases = ["No 🙈", "Are you sure? 🤨", "Error 404: No not found", "Nice try! 😜", "Just click YES already! 🙄"];
+    if (noAttempts < phrases.length) {
+      noBtn.innerText = phrases[noAttempts];
+    }
+
+    // 4. Disappear after 5 attempts
+    if (noAttempts >= 5) {
+      noBtn.style.display = "none";
+    }
+  }
+
+  noBtn.addEventListener("mouseover", teaseNoButton);
+  noBtn.addEventListener("click", teaseNoButton);
+  noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    teaseNoButton();
+  });
+
+  // YES button success action
+  yesBtn.addEventListener("click", () => {
+    try { music.play(); } catch(e) {}
+    
+    card.innerHTML = `
+      <h1 style="font-size: 32px;">OFFICIALLY MINE! 🏆</h1>
+      <p style="font-size:18px; color:#6a040f; line-height:1.5;">
+        Resistance was futile, I win! 😉<br><br>
+        <span style="color:#ff4d6d; font-weight:bold;">
+          By clicking this button, you have entered a non-refundable contract 
+          to be my Valentine. 📜✨
+        </span><br><br>
+        Now get ready for some serious pampering! ❤️🌹
+      </p>
+    `;
+    noBtn.style.display = "none";
+  });
+
+  // Floating hearts background
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => { heart.remove(); }, 6000);
+  }
+
+  setInterval(createHeart, 300);
+</script>
+
+</body>
+</html>
+ here
